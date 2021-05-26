@@ -1,15 +1,19 @@
 <?php
     // DB Params *DON'T FORGET TO CHANGE YOUR DATA*
     define('DB_HOST', 'localhost');
-    define('DB_USER', '_YOUR_USERNAME_');
-    define('DB_PASS', '_YOUR_PASSWORD_');
-    define('DB_NAME', '_YOUR_NAME_');
+    define('DB_USER', 'root');
+    define('DB_PASS', '');
+    define('DB_NAME', 'sharepost');
 
     // App Root
     define('APPROOT', dirname(dirname(__FILE__)));
     
     // URL Root *Example: http://localhost/Mvc-Framework/*
-    define('URLROOT', '_YOUR_URL_');
+    define('URLROOT', 'http://localhost/Sharepost');
 
     // Site Name
-    define('SITENAME', '_YOUR_SITENAME_');
+    define('SITENAME', 'SharePost');
+
+    // App Version
+    define('APPVERSION', '1.0');
+    
