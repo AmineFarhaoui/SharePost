@@ -3,7 +3,7 @@
     {
         public function __construct()
         {
-            
+            $this->userModel = $this->model('User');
         }
 
         public function register()
@@ -30,6 +30,11 @@
                 // Validate Email
                 if (empty($data['email'])) {
                     $data['email_error'] = 'Please enter email';
+                } else {
+                    // Check email
+                    if ($this->userModel->findUserByEmail($data['email']) == true) {
+                        $data['email_error'] = 'Email is already taken';
+                    }
                 }
 
                 // Validate Name
@@ -55,7 +60,18 @@
 
                 // Check if errors are empty
                 if (empty($data['email_error']) && empty($data['name_error']) && empty($data['password_error']) && empty($data['confirm_password_error'])) {
-                    die('SUCCES');
+                    // Validated
+
+                    // Hash Password
+                    $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+
+                    // Register User
+                    if ($this->userModel->register($data)) {
+                        flash('register_succes', 'You are registered and can log in');
+                        redirect('users/login');
+                    } else {
+                        die('Something went wrong');
+                    }
                 } else {
                     // Load view with errors
                     $this->view('/users/register', $data);
@@ -104,12 +120,31 @@
                     $data['password_error'] = 'Please enter password';
                 }
 
+                // Check for user/email
+                if ($this->userModel->findUserByEmail($data['email'])) {
+
+                } else {
+                    // User not found
+                    $data['email_error'] = 'No user found';
+                }
+
                 // Check if errors are empty
                 if (empty($data['email_error']) && empty($data['password_error'])) {
-                    die('SUCCES');
+                    // validate
+                    // Check and set logged user
+                    $loggedInUser = $this->userModel->login($data['email'], $data['password']);
+                    
+                    if ($loggedInUser) {
+                        // Create Session
+                        $this->createUserSession($loggedInUser);
+                    } else {
+                        $data['password_error'] = 'Password incorrect';
+
+                        $this->view('users/login', $data);
+                    }
                 } else {
                     // Load view with errors
-                    $this->view('/users/login', $data);
+                    $this->view('users/login', $data);
                 }
             } else {
                 // Init data
@@ -121,6 +156,36 @@
                 ];
 
                 $this->view('users/login', $data);
+            }
+        }
+
+        // Create User Session
+        public function createUserSession($user)
+        {
+            $_SESSION['user_id'] = $user->id;
+            $_SESSION['user_email'] = $user->email;
+            $_SESSION['user_name'] = $user->name;
+
+            redirect('pages/index');
+        }
+
+        // Logout user
+        public function logout()
+        {
+            unset($_SESSION['user_id']);
+            unset($_SESSION['user_email']);
+            unset($_SESSION['user_name']);
+            session_destroy();
+            redirect('users/login');
+        }
+
+        // Checkk if user is logged in
+        public function isLoggedIn()
+        {
+            if (isset($_SESSION['user_id'])) {
+                return true;
+            } else {
+                return false;
             }
         }
     }
