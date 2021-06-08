@@ -2,11 +2,11 @@
     <div class="row">
         <div class="col-md-6 mx-auto">
             <div class="card card-body bg-light mt-5">
-            <?php echo flash('register_succes'); ?>
+            <?php flash('register_succes'); ?>
                 <h2>Login</h2>
                 <p>Please fill out this form to login</p>
                 <form action="<?php echo URLROOT;?>/users/login" method="post">
-                    <div class="form-group mb-3">
+                    <div class="form-group mb-3 mx-auto">
                         <label for="name">Email: <sup>*</sup></label>
                         <input type="email" name="email" value="<?php echo $data['email']?>" class="form-control form-control-lg <?php echo (!empty($data['email_error'])) ? 'is-invalid' : '';?>">
                         <span class="invalid-feedback"><?php echo $data['email_error']?></span>

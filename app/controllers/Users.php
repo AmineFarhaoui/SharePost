@@ -166,7 +166,7 @@
             $_SESSION['user_email'] = $user->email;
             $_SESSION['user_name'] = $user->name;
 
-            redirect('pages/index');
+            redirect('posts/index');
         }
 
         // Logout user
@@ -177,16 +177,6 @@
             unset($_SESSION['user_name']);
             session_destroy();
             redirect('users/login');
-        }
-
-        // Checkk if user is logged in
-        public function isLoggedIn()
-        {
-            if (isset($_SESSION['user_id'])) {
-                return true;
-            } else {
-                return false;
-            }
         }
     }
     
